@@ -1,0 +1,245 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ink: #05070f;
+  --color-blue: #3b82f6;
+  --color-violet: #8b5cf6;
+  --color-cyan: #22d3ee;
+  --color-canvas: var(--canvas);
+  --color-fg: var(--fg);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-line: var(--line);
+  --color-chip: var(--chip);
+  --color-header: var(--header-bg);
+  --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * Bảng màu theo chủ đề. Mặc định là sáng; data-theme="dark" bật giao diện tối.
+ * [data-theme="dark"] lồng trong trang sáng (ví dụ màn hình điện thoại) vẫn giữ màu tối.
+ */
+:root[data-theme="dark"],
+[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #05070f;
+  --fg: #ffffff;
+  --body: #cbd5e1;
+  --muted: #94a3b8;
+  --line: rgba(255, 255, 255, 0.1);
+  --chip: rgba(255, 255, 255, 0.05);
+  --accent: #67e8f9;
+  --header-bg: rgba(5, 7, 15, 0.75);
+  --glass-top: rgba(255, 255, 255, 0.06);
+  --glass-bottom: rgba(255, 255, 255, 0.015);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: none;
+  --dot: rgba(148, 163, 184, 0.14);
+  --spot: rgba(59, 130, 246, 0.16);
+  --aurora-opacity: 0.55;
+  --orb-opacity: 0.8;
+  --ribbon-opacity: 0.3;
+  --grad-1: #60a5fa;
+  --grad-2: #8b5cf6;
+  --grad-3: #22d3ee;
+}
+
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #f6f8fc;
+  --fg: #0b1222;
+  --body: #334155;
+  --muted: #5b6b82;
+  --line: rgba(15, 23, 42, 0.1);
+  --chip: rgba(15, 23, 42, 0.05);
+  --accent: #0e7490;
+  --header-bg: rgba(246, 248, 252, 0.8);
+  --glass-top: rgba(255, 255, 255, 0.92);
+  --glass-bottom: rgba(255, 255, 255, 0.68);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --glass-shadow: 0 16px 40px -24px rgba(15, 23, 42, 0.28);
+  --dot: rgba(15, 23, 42, 0.08);
+  --spot: rgba(59, 130, 246, 0.1);
+  --aurora-opacity: 0.3;
+  --orb-opacity: 0.45;
+  --ribbon-opacity: 0;
+  --grad-1: #2563eb;
+  --grad-2: #7c3aed;
+  --grad-3: #0891b2;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--canvas);
+}
+
+body {
+  background: var(--canvas);
+  color: var(--body);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+::selection {
+  background: rgba(59, 130, 246, 0.45);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Chữ gradient xanh điện - tím - cyan */
+.text-gradient {
+  background-image: linear-gradient(100deg, var(--grad-1) 0%, var(--grad-2) 50%, var(--grad-3) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Thẻ kính mờ với viền phát sáng khi hover */
+.glass {
+  background: linear-gradient(180deg, var(--glass-top), var(--glass-bottom));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glow-border {
+  position: relative;
+  isolation: isolate;
+}
+
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.7), rgba(139, 92, 246, 0) 45%, rgba(34, 211, 238, 0.6));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.35;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.glow-border:hover::before {
+  opacity: 1;
+}
+
+/* Ánh sáng theo con trỏ (được set qua --mx, --my) */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), var(--spot), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.spotlight:hover::after {
+  opacity: 1;
+}
+
+/* Lưới chấm nhẹ phía sau một số section */
+.dot-grid {
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Nền ánh sáng chuyển động */
+@keyframes aurora-shift {
+  0% {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, 4%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+  }
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: var(--aurora-opacity);
+  will-change: transform;
+  animation: aurora-shift 16s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Độ đậm của ảnh quả cầu ở hero thay đổi theo chủ đề */
+.hero-orb {
+  opacity: var(--orb-opacity);
+}
+
+/* Ảnh dải sóng nền chỉ hợp với nền tối nên ẩn ở light mode */
+.ribbon-bg {
+  opacity: var(--ribbon-opacity);
+}
+
+/* Logo có hai bản: chữ trắng cho nền tối, chữ đậm cho nền sáng */
+.logo-on-light {
+  display: none;
+}
+
+:root[data-theme="light"] .logo-on-light {
+  display: block;
+}
+
+:root[data-theme="light"] .logo-on-dark {
+  display: none;
+}
+
+/* Dải chữ chạy vô hạn */
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
