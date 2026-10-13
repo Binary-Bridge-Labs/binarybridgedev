@@ -2,6 +2,9 @@ import type { MetadataRoute } from "next";
 import { getDictionary, locales } from "@/lib/i18n";
 import { localePath, siteUrl } from "@/lib/site";
 
+// Bắt buộc với output: "export" để sitemap.xml được tạo thành file tĩnh.
+export const dynamic = "force-static";
+
 // Đường dẫn không gồm ngôn ngữ. Trang dự án được thêm theo slug của từng ngôn ngữ.
 function staticPaths(): string[] {
   return ["", "/about", "/careers", "/projects", "/process", "/technology", "/contact", "/privacy", "/terms"];
